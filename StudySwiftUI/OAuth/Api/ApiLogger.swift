@@ -15,6 +15,18 @@ final class ApiLogger: EventMonitor{
     }
     
     func request<Value>(_ request: DataRequest, didParseResponse response: DataResponse<Value, AFError>) {
+        if let error = response.error{
+            switch error {
+            case .sessionTaskFailed(let error):
+                if error._code == NSURLErrorTimedOut{
+                    print("API 타임아웃")
+                    NotificationCenter.default.post(name: .requestTimeOut,object: nil)
+                }
+            default:
+                print("default")
+            }
+        }
+        
         debugPrint("ApiLogger - Finished: \(response)")
     }
 }

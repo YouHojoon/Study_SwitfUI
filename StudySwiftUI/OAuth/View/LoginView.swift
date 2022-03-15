@@ -18,7 +18,10 @@ struct LoginView: View{
         VStack{
             Form{
                 Section{
-                    TextField("이메일", text: $emailInput).textInputAutocapitalization(.never).disableAutocorrection(true).keyboardType(.emailAddress)
+                    TextField("", text: $emailInput).textInputAutocapitalization(.never).disableAutocorrection(true).keyboardType(.emailAddress)
+                        .placeholder(shouldShow: emailInput.isEmpty){
+                            Text("이메일을 입력해주세요!").font(.system(size: 20)).foregroundColor(.green).opacity(0.5)
+                        }
                     SecureField("비밀번호", text: $passwordInput).textInputAutocapitalization(.never).disableAutocorrection(true).keyboardType(.default)
                 }header: {
                     Text("로그인 정보")
