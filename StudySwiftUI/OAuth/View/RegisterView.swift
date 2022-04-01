@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Combine
 struct RegisterView: View{
     @EnvironmentObject var viewModel: UserViewModel
     @Environment(\.dismiss) var dismiss
@@ -16,6 +17,10 @@ struct RegisterView: View{
     @State var passwordInput = ""
     @State var repeatPasswordInput = ""
     @State var shouldShowAlert = false
+    
+    @State var isReisterButtonDisable = true
+    var subscription = Set<AnyCancellable>()
+    
     var body: some View{
         VStack{
             Form{
@@ -30,15 +35,21 @@ struct RegisterView: View{
                     Text("이메일")
                 }
                 Section{
-                    SecureField("비밀번호", text: $passwordInput).textInputAutocapitalization(.never).disableAutocorrection(true).keyboardType(.default)
-                    SecureField("비밀번호 확인", text: $repeatPasswordInput).textInputAutocapitalization(.never).disableAutocorrection(true).keyboardType(.default)
+                    SecureField("비밀번호", text: $passwordInput).textInputAutocapitalization(.never).disableAutocorrection(true).keyboardType(.default).onReceive(passwordInput.publisher.removeDuplicates(), perform: {_ in
+                        viewModel.passwordInput.send(passwordInput)
+                    })
+                    SecureField("비밀번호 확인", text: $repeatPasswordInput).textInputAutocapitalization(.never).disableAutocorrection(true).keyboardType(.default).onReceive(repeatPasswordInput.publisher.removeDuplicates(), perform: {_ in
+                        viewModel.repeatPasswordInput.send(repeatPasswordInput)
+                    })
                 }header: {
                     Text("비밀번호")
                 }
                 Section{
                     Button("회원가입 하기"){
                         viewModel.register(name: nameInput, email: emailInput, password: passwordInput)
-                    }
+                    }.onReceive(viewModel.isPasswordMatch, perform: {
+                        isReisterButtonDisable = !$0
+                    }).disabled(isReisterButtonDisable)
                 }header: {
                     
                 }
@@ -49,8 +60,11 @@ struct RegisterView: View{
                     self.dismiss()
                 }
             })
+            
         }.navigationTitle(Text("회원가입"))
     }
+    
+    
 }
 
 struct RegisterView_Previews: PreviewProvider{

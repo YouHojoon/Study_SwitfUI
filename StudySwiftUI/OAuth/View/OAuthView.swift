@@ -17,6 +17,7 @@ struct OAuthView: View{
     var body: some View{
         NavigationView{
             ZStack{
+                VideoBackgroundView()
                 VStack{
                     Spacer()
                     Image(systemName: "lock.shield.fill").font(.system(size:160))
@@ -87,6 +88,6 @@ struct OAuthView: View{
 
 struct OAuthView_Previews: PreviewProvider{
     static var previews: some View{
-        OAuthView()
+        OAuthView().environmentObject(UserViewModel())
     }
 }

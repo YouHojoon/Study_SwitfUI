@@ -13,9 +13,12 @@ class UserViewModel: ObservableObject{
     @Published var loggedInUser: UserData? = nil
     @Published var userList : [UserData] = []
     
+    var passwordInput = PassthroughSubject<String,Never>()
+    var repeatPasswordInput = PassthroughSubject<String,Never>()
+
     let registSuccess = PassthroughSubject<(),Never>()
     let loginSuccess = PassthroughSubject<(),Never>()
-    
+    lazy var isPasswordMatch : AnyPublisher<Bool, Never> = Publishers.CombineLatest(passwordInput, repeatPasswordInput).map{$0==$1}.print().eraseToAnyPublisher()
     
     func register(name:String, email:String, password: String){
         OAuthApi.shared.register(name: name, email: email, password: password).sink(receiveCompletion: {

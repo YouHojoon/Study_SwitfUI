@@ -11,7 +11,8 @@ import SwiftUI
 struct StudySwiftUIApp: App {
     var body: some Scene {
         WindowGroup {
-            OAuthView().environmentObject(UserViewModel())
+//            OAuthView().environmentObject(UserViewModel())
+            SmoothHeroEffectHomeView()
         }
     }
 }

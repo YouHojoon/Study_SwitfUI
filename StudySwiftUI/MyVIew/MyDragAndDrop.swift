@@ -39,7 +39,7 @@ struct MyDragAndDropView: View{
             }
         }.onChange(of: isEditMode){_ in
             print("변경")
-        }
+        } 
     }
 }
 
